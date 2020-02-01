@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<meta charset="utf-8"></meta>
+<title>소스모드</title>
+<head>
+<style>
+h1{
+background-color: green;
+bolder: 2px solid red;
+text-align: center;
+color: white;
+}
+</style>
+</head>
+<body>
+<h1>플레이어가 바라보는 위치 구하기</h1>
+<p></p>
+<hr></hr>
+<img src="20200201174743_1.jpg" width="550" height="350"></img>
+<p>메인 함수들</p>
+<ul>
+<li>void TR_TraceRayFilter(const float pos[3], const float vec[3], int flags, RayType rtype, TraceEntityFilter filter, any data)</li>
+<li>Handle TR_TraceRayFilterEx(const float pos[3], const float vec[3], int flags, RayType rtype, TraceEntityFilter filter, any data)</li>
+</ul>
+<p>사용할 함수들</p>
+<ul>
+<li>void OnPluginStart()</li>
+<li>void RegConsoleCmd(const char[] cmd, ConCmd callback, const char[] description, int flags)</li>
+<li>void TR_GetEndPosition(float pos[3], Handle hndl)</li>
+<li>bool TR_DidHit(Handle hndl)</li>
+<li>float GetEntPropFloat(int entity, PropType type, const char[] prop, int element)</li>
+<li>void GetEntPropVector(int entity, PropType type, const char[] prop, float vec[3], int element)</li>
+</ul>
+<p>기억해 두어야 할것들</p>
+<ul>
+<li>MASK_SHOT</li>
+</ul>
+<p>자세한 정보: <a href="https://github.com/alliedmodders/sourcemod/blob/master/plugins/include/sdktools_trace.inc">https://github.com/alliedmodders/sourcemod/blob/master/plugins/include/sdktools_trace.inc</a></p>
+<hr/>
+<h3><p>플레이어가 바라보는 위치 구하기(TR_TraceRayFilter)</p></h3>
+<p>void TR_TraceRayFilter(클라이언트 혹은 엔티티 위치(origin), 클라이언트 혹은 엔티티의 바라보는 각도(angle), 플레그, 타입, 필터 함수 이름)</p>
+<p>예제:</p>
+<pre>
+#include &lt;sourcemod&gt;
+#include &lt;sdktools&gt;
+
+public void OnPluginStart(){
+
+RegConsoleCmd("sm_teleport", teleport);
+
+}
+
+public Action teleport(int client, int args){
+
+float origin[3];
+float angle[3];
+float pos[3];
+
+angle[0] = GetEntPropFloat(client, Prop_Send, "m_angEyeAngles[0]"); 
+angle[1] = GetEntPropFloat(client, Prop_Send, "m_angEyeAngles[1]");
+
+GetEntPropVector(client, Prop_Send, "m_vecOrigin", origin);
+
+origin[2] += 20.0;
+
+TR_TraceRayFilter(origin, angle, MASK_SHOT, RayType_Infinite, filter);
+
+if(TR_DidHit(INVALID_HANDLE)){
+TR_GetEndPosition(pos, INVALID_HANDLE);
+}
+
+SetEntPropVector(client, Prop_Send, "m_vecOrigin", pos);
+
+return Plugin_Handled;
+
+}
+
+public bool filter(int entity, int contentsMask){
+
+return false;
+
+}
+
+</pre>
+<hr/>
+<h3><p>플레이어가 바라보는 위치 구하기(TR_TraceRayFilterEx)</p></h3>
+<p>Handle TR_TraceRayFilterEx(클라이언트 혹은 엔티티 위치(origin), 클라이언트 혹은 엔티티의 바라보는 각도(angle), 플레그, 타입, 필터 함수 이름)</p>
+<p>예제:</p>
+<pre>
+#include &lt;sourcemod&gt;
+#include &lt;sdktools&gt;
+
+public void OnPluginStart(){
+
+RegConsoleCmd("sm_teleport", teleport);
+
+}
+
+public Action teleport(int client, int args){
+
+float origin[3];
+float angle[3];
+float pos[3];
+
+angle[0] = GetEntPropFloat(client, Prop_Send, "m_angEyeAngles[0]"); 
+angle[1] = GetEntPropFloat(client, Prop_Send, "m_angEyeAngles[1]");
+
+GetEntPropVector(client, Prop_Send, "m_vecOrigin", origin);
+
+origin[2] += 20.0;
+
+Handle Ray = TR_TraceRayFilterEx(origin, angle, MASK_SHOT, RayType_Infinite, filter);
+
+if(TR_DidHit(Ray)){
+TR_GetEndPosition(pos, Ray);
+}
+
+SetEntPropVector(client, Prop_Send, "m_vecOrigin", pos);
+
+delete Ray;
+
+return Plugin_Handled;
+
+}
+
+public bool filter(int entity, int contentsMask){
+
+return false;
+
+}
+
+</pre>
+<hr/>
+<p>요약</p>
+<pre>
+
+void 형 TR_TraceRayFilter 함수는 글로벌 이고
+Handle 형 TR_TraceRayFilterEx 함수는 로컬 이다
+
+이뜻은 Handle 형은 제어에 강하다
+하지만 void 형은 제어에 강하지 못하다
+
+</pre>
+</body>
