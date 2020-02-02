@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<meta charset="utf-8"></meta>
+<title>소스모드</title>
+<head>
+<style>
+h1{
+background-color: green;
+bolder: 2px solid red;
+text-align: center;
+color: white;
+}
+</style>
+</head>
+<body>
+<h1>static, public, const, #define</h1>
+<strong><pre>
+_________________________________________
+
+static
+_________________________________________
+
+static 은 private 과 똑같습니다
+
+파일/함수 에서만 사용할수있고 외부에서는 사용할수없습니다
+
+그리고 함수안에있는 변수는 지역(local(로컬)) 변수라고 합니다
+그 반대로 함수를 벗어나 있는 변수는 전역(global(글로벌)) 변수라고 합니다
+
+글로벌 형식:
+
+//testfile.inc
+static int global_nice;
+
+//testfile2.inc
+static int global_loop;
+
+로컬 형식:
+
+//매개변수가 쓸모없는 경우에는 이처럼 공백으로 채워주거나 int function(void) 로 작성해주시면 됩니다
+
+int function()
+{
+
+   static int var1;
+   
+   var1 = var1 + a;
+   
+   return var1;
+   
+}
+
+_________________________________________
+
+public
+_________________________________________
+
+
+우리가 다른 파일안에 있는 포워드 함수를 사용할때 public 이라는 키워드를 사용합니다.
+
+사용할때는 func(); 이렇게가 아니라
+
+func()
+{
+
+
+}
+
+이렇게 입니다 
+
+예제:
+---------------------
+#include &lt;sourcemod&gt;
+
+static int test;
+
+public void OnPluginStart(){
+
+test = 30;
+
+}
+
+public void OnClientPutInServer(){
+
+test = 2;
+
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
+{
+    test = 31;
+    return Plugin_Continue;
+}
+---------------------
+
+그리고 우리가 다른 파일안에 있는 함수를 사용할려면 #include 를 해야합니다
+#include 는 말그대로 포함 시키는 의미입니다 파일을 포함시킬때 sourcemod\scripting\include\ 이 폴더 위치와 연관 되어야합니다
+
+_________________________________________
+
+const
+_________________________________________
+
+const 는 상수를 의미합니다
+상수는 그 말 처럼 값을 바꿀수가 없습니다
+const 를 붙히는 방법은 자료형 뒤에다가 붙이시면 됩니다
+
+예제: 
+
+const float per = 30.0;
+const char word = "A"; 
+const int word2 = 3000; 
+const char words[30] = "HELLO WORLD";
+const bool TRUE = true;
+
+그리고 "" &lt;-- 이거는 상수라는 의미라서 const char 혹은 배열 char 를 표현할때 사용합니다 
+
+_________________________________________
+
+#define
+_________________________________________
+
+#define 은 상수입니다
+const 와는 아주다른 상수입니다
+
+#define 은 복사 붙혀넣기라고 생각하시면 이해가 아마 잘될껍니다
+왜냐면 #define 안에 명시된 코드를 그쪽에 붙혀 넣기 때문입니다
+
+#define 으로 상수 만드는 방법은
+
+#define 이름 코드
+
+입니다
+그림을 보시면 이해가 가실 거라고 믿습니다
+
+<img src="000001.png" width="550" height="350"/>
+<img src="000002.png" width="550" height="350"/>
+
+그리고 #define 은 한줄만 해석하기때문에 \ 로 한줄 더 사용하겠다고 표시해주면 됩니다
+
+#define NAME int name = 30;\
+int name2 = 40;\
+int name50 = 50;\
+int name00 = 31;
+
+NAME -->
+int name = 30;
+int name50 = 40;
+int name00 = 40;
+
+그리고 #define 은 함수 매개변수처럼 값을 받을수 있습니다
+방법은
+
+#define 이름(%1, %2, %3, %4, ... %n) 코드
+
+예제:
+
+#define ADD(%1, %2) %1 + %2
+
+float add = ADD(1.0, 2.0); --> float add = 1.0 + 2.0;
+
+_________________________________________
+
+</pre></strong>
+</body>
