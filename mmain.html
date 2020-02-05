@@ -6,14 +6,20 @@
 
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap');
 
-body
-{
 
-background-image: url("82463.jpg");
-background-repeat: no-repeat;
-background-size: cover;
+#Img{
+
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  min-width: 100%;
+  min-height: 100%;
 
 }
+body{
+
+}
+
 
 ul {
   list-style-type: none;
@@ -23,10 +29,12 @@ ul {
   overflow: hidden;
   background-color: #A0A0A0;
   opacity: 0.7;
+
 }
 
 li {
   float: right;
+  
 }
 
 li a {
@@ -36,11 +44,13 @@ li a {
   text-align: center;
   padding: 20px 20px;
   text-decoration: none;
+  
 }
 
 li a:hover {
   background-color: #555;
   color: white;
+  
 }
 
 a.active{
@@ -53,29 +63,34 @@ color: white;
 pre.Box001{
 
 font-family: 'Nanum Gothic', sans-serif;
+z-index: 1;
 border-radius: 43px;
 margin-left: auto;
 margin-right: auto;  
 width: 1000px;
 height: 1000px;
-background-color:rgba(148, 196, 209, 0.6);
-color: white;
+background-color:rgba(255, 255, 255, 0.9);
+color: black;
 text-align: start;
 font-size: larger;
-
+right: 150px;
 }
 
 </style>
 </head>
 <body>
+
+<img src="0001.jpg" id="Img"/>
+
 <ul>
-  <li><a href="login.html">로그인</a></li>
+  <li><a href="login.php">로그인</a></li>
   <li><a href="register.html">회원가입</a></li>
   <li><a href="main.html", class="active">홈</a></li>
   <li><a href="News.html">뉴스</a></li>
+  <li><a href="Rules.html">규칙</a></li>
 </ul>
 
-<pre class="Box001">
+<pre class="Box001" style="position:absolute;">
 
 
     설명
@@ -83,6 +98,8 @@ font-size: larger;
     설명
     설명
 </pre>
+
+
 
 </body>
 </html>
